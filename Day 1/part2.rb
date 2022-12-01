@@ -3,12 +3,11 @@
 input = File.new("input", "r")
 
 cur = 0
-totals = Array.new
+totals = []
 
 input.each do |line|
     if line != "\n" 
         cur += line.to_i
-        #puts line
         next
     end
     totals.push(cur)
