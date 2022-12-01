@@ -1,0 +1,2 @@
+This is a repository of code solutions for the Advent of Code 2022.
+This year the plan is to do solutions using Ruby, and to stop actively participating when problems and their solutions become too complex to finish in the span of 24 hours.
