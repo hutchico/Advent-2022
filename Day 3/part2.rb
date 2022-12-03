@@ -10,7 +10,7 @@ while 1 == 1 # while TRUE?
     end
     comp_1 = input.readline
     comp_2 = input.readline
-    comp_3 = input.readline
+    comp_3 = input.readline #almost like there's 3N inputs for a reason, right?
 
     li = comp_1.split(//)
     li.each do |b|
