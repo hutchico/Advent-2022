@@ -29,8 +29,8 @@ input.each do |line|
     elf2 = pair[1].split('-')
     elf1 = Range.new(Integer(elf1[0]),Integer(elf1[1]))
     elf2 = Range.new(Integer(elf2[0]),Integer(elf2[1]))
-    bigger = elf1.size > elf2.size ? true : false #is elf1 larger than elf2
-    if(bigger) #always compare larger section to smaller one
+    
+    if(elf1.size > elf2.size) #always compare larger section to smaller one
         overlaps1 += part1(elf1,elf2)
         overlaps2 += part2(elf1,elf2)
     else
