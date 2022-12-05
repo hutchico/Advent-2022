@@ -1,25 +1,5 @@
 #!/usr/bin/ruby -w
 
-def move_crates(total,start,dest)
-    #note: start and dest are arrays, not integers
-    nend = start.size - total #get index value to start grabbing from
-    #todo: probably a way to do this by adding entire subarrays rather than one element at a time
-    for i in 1..total do
-        dest.push(start[nend])
-        start.delete_at(nend)
-    end
-end
-
-def print_ship(ship)
-    for i in 0..8
-        for j in 0..ship[i].size
-            print ship[i][j]
-            print ' '
-        end
-        puts
-    end
-end
-
 input = File.new("input.txt","r")
 
 ship = []
@@ -47,9 +27,20 @@ input.readline #skip whitespace line
 input.each do |line|
     move = line.split(' ')
     total = move[1].to_i
-    start = move[3].to_i
-    dest = move[5].to_i
-    move_crates(total,ship[start - 1],ship[dest - 1])
+    start = move[3].to_i - 1 #stack label => array label
+    dest = move[5].to_i - 1
+    
+    middle = ship[start].size - total #get index value to start copying at
+    
+    sub = ship[start][middle,ship[start].size]
+    ship[dest] = ship[dest] + sub
+    #WHY is this not logically equivalent to
+    # ship[dest].concat(ship[start][middle,ship[start].size]) 
+    #or 
+    # ship[dest] = ship[dest] + ship[start][middle,ship[start].size] 
+    # ????????????????
+
+    ship[start] = ship[start][0,middle]
 end
 
 #print_ship(ship)
