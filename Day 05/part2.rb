@@ -31,20 +31,12 @@ input.each do |line|
     dest = move[5].to_i - 1
     
     middle = ship[start].size - total #get index value to start copying at
-    
-    sub = ship[start][middle,ship[start].size]
-    ship[dest] = ship[dest] + sub
-    #WHY is this not logically equivalent to
-    # ship[dest].concat(ship[start][middle,ship[start].size]) 
-    #or 
-    # ship[dest] = ship[dest] + ship[start][middle,ship[start].size] 
-    # ????????????????
+
+    ship[dest] = ship[dest] + ship[start][middle,ship[start].size]
 
     ship[start] = ship[start][0,middle]
 end
 
-#print_ship(ship)
-
 for i in 0..8
-    print ship[i].last
+    print ship[i].last #top of every "stack"
 end
