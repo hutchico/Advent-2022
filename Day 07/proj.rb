@@ -51,10 +51,6 @@ def explore(tree,file)
             break
         end
         line = file.readline
-        #print "----CURRENT DIRECTORY: "
-        #print tree.getn
-        #puts ''
-        #puts line
         line = line.split(' ')
         fresh_node = Node.new("null")
         if line[0] == "$"
@@ -63,7 +59,6 @@ def explore(tree,file)
                     return
                 else #iterate through tree until we find the aforementioned directory
                     for i in 0..tree.count_children - 1
-                        #puts tree.getn
                         if tree.getc(i).getn == line[2]
                             explore(tree.getc(i),file)
                             break
@@ -103,52 +98,38 @@ def size_dirs(tree)
 end
 
 def find_dir(tree,target,smallest)
-    #todo: there is NO NEED to record a name
     if tree.count_children == 0
-        return tree.getn, smallest
+        return smallest
     end
     per = tree.sum_dir
-    name = ""
     if per > target
         if per < smallest
-            name = tree.getn
             smallest = per
         end
         for i in 0..tree.count_children - 1
-            tmpname, tmpsize = find_dir(tree.getc(i),target,smallest)
-            if tmpsize < smallest
-                name = tmpname
-                smallest = tmpsize
+            ret = find_dir(tree.getc(i),target,smallest)
+            if ret < smallest
+                smallest = ret
             end
         end
     end
-    return name, smallest
+    return smallest
 end
 
 input = File.new("input.txt","r")
 
 tree = Node.new("/")
-input.readline #skip root
+input.readline #skip root command
 
 explore(tree,input)
 
-size_sum = 0
-
-size_sum = size_dirs(tree)
-
-puts size_sum
+puts size_dirs(tree)
 
 to_del = 30000000 - (70000000 - tree.sum_dir)
 
-puts "Target directory size: #{to_del}"
+#puts "Target directory size: #{to_del}"
 
-tgt_dir = "/"
-tmp = ""
-tmpsize = 0
-tmp,tmpsize = find_dir(tree,to_del,70000000) #third arg is an arbitrary large number
-
-puts tmpsize
-
+puts find_dir(tree,to_del,70000000) #third arg is an arbitrary large number
 
 #specific numbers:
 #total space: 70000000
