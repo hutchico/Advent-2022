@@ -2,14 +2,13 @@
 
 RT2 = Math.sqrt(2)
 RT5 = Math.sqrt(5)
+RT8 = Math.sqrt(8)
 
 class Rope
     def initialize 
-        @knots = [] #array recording positions of subtails
+        @knots = [] #array recording positions of knots
         @grid = Hash.new #collection of unique indices where Tail knot has been present
-        @bug = [] #debug, delete from final draft
         
-        strt = [0,0]
         for i in 0..9 
             @knots[i] = [0,0]
         end
@@ -38,7 +37,7 @@ class Rope
             else #posy - ty < 0
                 ty -= 1
             end
-        when RT5..3 #diagonal movement
+        when RT5..RT8 #diagonal movement
             if(posx - tx > 0 && posy - ty > 0) #up right
                 tx += 1
                 ty += 1
@@ -52,8 +51,6 @@ class Rope
                 tx += 1
                 ty -= 1
             end
-        else
-            return #this should never execute
         end
         @knots[i][0] = tx
         @knots[i][1] = ty
@@ -72,10 +69,9 @@ class Rope
         else
             @grid[arr] = 1
         end
-        @bug.push(@knots[9])
     end
 
-    def translate_motion
+    def translate_motion #move the rest of the rope to match head motion
         for i in 1..9
             move_knots(i)
         end
@@ -104,8 +100,6 @@ class Rope
                 @knots[0][1] -= 1
                 translate_motion
             end
-        else
-            #default?
         end
     end
 
@@ -125,5 +119,3 @@ input.each do |command|
 end
 
 puts knot.geth
-
-

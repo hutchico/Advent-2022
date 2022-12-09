@@ -10,14 +10,11 @@ class Rope
         @tx = 0 #position of tail relative to head's location
         @ty = 0
         @grid = Hash.new #collection of unique indices where Tail has been present
-        @bug = [] #debug, delete from final draft
         add_hash #record initial tail position
     end
 
     def update_tail #internal method called every time the head is moved somewhere
         #two different actions depending on if px == tx and/or py == ty?
-        #puts get_dist
-        #puts "#{@posx},#{@posy} - #{@tx},#{@ty}"
         case get_dist
         when 0..RT2 #head is still within acceptable range
             return
@@ -39,24 +36,18 @@ class Rope
             if(@posx - @tx > 0 && @posy - @ty > 0) #up right
                 @tx += 1
                 @ty += 1
-                add_hash
             elsif(@posx - @tx < 0 && @posy - @ty > 0) #up left
                 @tx -= 1
                 @ty += 1
-                add_hash
             elsif(@posx - @tx < 0 && @posy - @ty < 0) #down left
                 @tx -= 1
                 @ty -= 1
-                add_hash
             else #down right
                 @tx += 1
                 @ty -= 1
-                add_hash
             end
-        else
-            puts "uh oh"
-            return 
         end
+        add_hash
     end
 
     def get_dist #helper function to find euclidean distance between head and tail
@@ -64,18 +55,15 @@ class Rope
     end
 
     def add_hash
-        #puts "new pos #{@posx},#{@posy} - #{@tx},#{@ty}"
         arr = [@tx,@ty]
         if(@grid[arr] != nil)
             @grid[arr] += 1
         else
             @grid[arr] = 1
         end
-        @bug.push(arr)
     end
 
     def move(dir, dist)
-        #puts "moving #{dir} #{dist}"
         case dir
         when 'R'
             for i in 1..dist
@@ -97,15 +85,10 @@ class Rope
                 @posy -= 1
                 update_tail
             end
-        else
-            #default?
         end
     end
 
     def geth
-        #print @bug
-       # puts ''
-        #puts @grid
         return @grid.size
     end
 
@@ -121,5 +104,3 @@ input.each do |command|
 end
 
 puts knot.geth
-
-
