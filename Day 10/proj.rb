@@ -3,14 +3,11 @@
 input = File.new("input.txt","r")
 
 reg = 1
-
-timer = [0,0]
-
 cycles = 0
 
 screen = Array.new(240)
 screen.fill(' ')
-values = [1]
+values = [1] #track value of reg during each cycle
 
 while true
     if input.eof?
@@ -27,16 +24,13 @@ while true
     end
 
     for i in 1..2 #addx
-        if i == 1
-            timer[1] = command[1].to_i
-        end
         if ((reg-1)..(reg+1)).cover?(cycles % 40)
             screen[cycles] = '#'
         end
         cycles += 1
-        reg += timer[0]
-        timer[0] = timer[1]
-        timer[1] = 0
+        if i == 2
+            reg += command[1].to_i
+        end
         values.push(reg)
     end
 end
