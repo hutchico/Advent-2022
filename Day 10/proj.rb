@@ -9,8 +9,8 @@ timer = [0,0]
 cycles = 0
 
 screen = Array.new(240)
-screen.fill('.')
-values = [1] #record value of reg during every cycle?
+screen.fill(' ')
+values = [1]
 
 while true
     if input.eof?
@@ -22,17 +22,11 @@ while true
             screen[cycles] = '#'
         end
         cycles += 1
-        reg += timer[0]
-        if reg > 40
-            reg = reg % 40
-        end
-        timer[0] = timer[1]
-        timer[1] = 0
         values.push(reg)
         next
     end
 
-    for i in 1..2
+    for i in 1..2 #addx
         if i == 1
             timer[1] = command[1].to_i
         end
@@ -41,15 +35,11 @@ while true
         end
         cycles += 1
         reg += timer[0]
-        if reg > 40
-            reg = reg % 40
-        end
         timer[0] = timer[1]
         timer[1] = 0
         values.push(reg)
     end
 end
-
 
 puts 20 * values[19] + 60 * values[59] + 100 * values[99] + 140 * values[139] + 180 * values[179] + 220 * values[219]
 
@@ -59,4 +49,3 @@ for i in 0..5
     end
     puts ''
 end
-
