@@ -16,6 +16,48 @@ class Rope
         add_hash #record initial tail position
     end
 
+    def move(dir, dist)
+        case dir
+        when 'R'
+            for i in 1..dist
+                @knots[0][0] += 1
+                translate_motion
+            end
+        when 'L'
+            for i in 1..dist
+                @knots[0][0] -= 1
+                translate_motion
+            end
+        when 'U'
+            for i in 1..dist
+                @knots[0][1] += 1
+                translate_motion
+            end
+        when 'D'
+            for i in 1..dist
+                @knots[0][1] -= 1
+                translate_motion
+            end
+        end
+    end
+
+    def geth
+        return @grid.size
+    end
+
+    private
+
+    def get_dist(index1,index2) #helper function to find euclidean distance between two knots
+        return Math.sqrt((@knots[index1][0] - @knots[index2][0])**2 + (@knots[index1][1] - @knots[index2][1])**2)
+    end
+
+    def translate_motion #move the rest of the rope to match head motion
+        for i in 1..9
+            move_knots(i)
+        end
+        add_hash
+    end
+
     def move_knots(i) #internal method called every time the head is moved somewhere
         #two different actions depending on if px == tx and/or py == ty?
         
@@ -56,57 +98,14 @@ class Rope
         @knots[i][1] = ty
     end
 
-    def get_dist(index1,index2) #helper function to find euclidean distance between two knots
-        return Math.sqrt((@knots[index1][0] - @knots[index2][0])**2 + (@knots[index1][1] - @knots[index2][1])**2)
-    end
-
     def add_hash
-        x = @knots[9][0]
-        y = @knots[9][1]
-        arr = [x,y]
+        arr = [@knots[9][0],@knots[9][1]] #[x,y]
         if(@grid[arr] != nil)
             @grid[arr] += 1
         else
             @grid[arr] = 1
         end
     end
-
-    def translate_motion #move the rest of the rope to match head motion
-        for i in 1..9
-            move_knots(i)
-        end
-        add_hash
-    end
-
-    def move(dir, dist)
-        case dir
-        when 'R'
-            for i in 1..dist
-                @knots[0][0] += 1
-                translate_motion
-            end
-        when 'L'
-            for i in 1..dist
-                @knots[0][0] -= 1
-                translate_motion
-            end
-        when 'U'
-            for i in 1..dist
-                @knots[0][1] += 1
-                translate_motion
-            end
-        when 'D'
-            for i in 1..dist
-                @knots[0][1] -= 1
-                translate_motion
-            end
-        end
-    end
-
-    def geth
-        return @grid.size
-    end
-
 end
 
 input = File.new("input.txt","r")

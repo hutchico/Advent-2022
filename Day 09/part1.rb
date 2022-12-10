@@ -12,6 +12,36 @@ class Rope
         @grid = Hash.new #collection of unique indices where Tail has been present
         add_hash #record initial tail position
     end
+    def move(dir, dist)
+        case dir
+        when 'R'
+            for i in 1..dist
+                @posx += 1
+                update_tail
+            end
+        when 'L'
+            for i in 1..dist
+                @posx -= 1
+                update_tail
+            end
+        when 'U'
+            for i in 1..dist
+                @posy += 1
+                update_tail
+            end
+        when 'D'
+            for i in 1..dist
+                @posy -= 1
+                update_tail
+            end
+        end
+    end
+
+    def geth
+        return @grid.size
+    end
+
+    private
 
     def update_tail #internal method called every time the head is moved somewhere
         #two different actions depending on if px == tx and/or py == ty?
@@ -21,16 +51,12 @@ class Rope
         when 2 #vertical or horizontal movement needed
             if(@posx - @tx > 0) #right
                 @tx += 1
-                add_hash
             elsif(@posy - @ty > 0) #up
                 @ty += 1
-                add_hash
             elsif(@posx - @tx < 0) #left
                 @tx -= 1
-                add_hash
             else #posy - ty < 0
                 @ty -= 1
-                add_hash
             end
         when RT5 #diagonal movement
             if(@posx - @tx > 0 && @posy - @ty > 0) #up right
@@ -61,35 +87,6 @@ class Rope
         else
             @grid[arr] = 1
         end
-    end
-
-    def move(dir, dist)
-        case dir
-        when 'R'
-            for i in 1..dist
-                @posx += 1
-                update_tail
-            end
-        when 'L'
-            for i in 1..dist
-                @posx -= 1
-                update_tail
-            end
-        when 'U'
-            for i in 1..dist
-                @posy += 1
-                update_tail
-            end
-        when 'D'
-            for i in 1..dist
-                @posy -= 1
-                update_tail
-            end
-        end
-    end
-
-    def geth
-        return @grid.size
     end
 
 end
