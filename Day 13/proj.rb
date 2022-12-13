@@ -22,7 +22,7 @@ def merge(left, right)
             arr.push(right.shift)
         end
     end
-    return arr.concat(left).concat(right)
+    return arr + left + right
 end
 
 def parse(file)
@@ -49,7 +49,7 @@ def make_arr(args)
             return li
         else
             val = args[0].to_i
-            if args[0] == "1" && args[1] == "0" #hardcoding 10 because I only see that in the inputs
+            if args[0] == "1" && args[1] == "0" #hardcoding 10 b/c it's the only 2-digit number
                 val = (args[0].to_i * 10) + args[1].to_i
                 args.shift
             end
@@ -61,10 +61,10 @@ end
 
 def compare_lists(li1, li2)
 
-    size = li1.size < li2.size ? li2.size : li1.size
+    size = li1.size < li2.size ? li2.size : li1.size #use larger array for size bounding
 
     for i in 0..size - 1
-        if li2[i] == nil
+        if li2[i] == nil #second array runs out of arguments first
             return false
         elsif li1[i] == nil
             return true
@@ -87,7 +87,7 @@ def compare_lists(li1, li2)
             if li1[i].is_a?(Integer) #implies li2[i] is an array
                 arr.push(li1[i])
                 val = compare_lists(arr,li2[i])
-                if val == nil
+                if val == nil #workaround for integer == integer result
                     next
                 end
                 return val
