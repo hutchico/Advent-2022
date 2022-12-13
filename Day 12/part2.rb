@@ -10,6 +10,7 @@ class Node
 
     def add_conn(toAdd)
         @connections.push(toAdd)
+        sort_connections
     end
 
     def set_height(hgt)
@@ -39,6 +40,8 @@ class Node
     def get_conns
         return @connections
     end
+
+    private 
 
     def sort_connections #prioritize connections with the largest height for dfs
         @connections = @connections.sort { |a, b| b.get_height <=> a.get_height}
@@ -139,7 +142,6 @@ for y in 0..map.size - 1
                 map[y][x].add_conn(map[y+1][x])
             end
         end
-        map[y][x].sort_connections
     end
 end
 
