@@ -114,7 +114,7 @@ right += 1000000
 count = 0
 for i in left..right
     for j in 0...ranges.size
-        if ranges[j].include?(i)
+        if ranges[j].cover?(i)
             count += 1
             break
         end
@@ -124,8 +124,8 @@ for i in left..right
     end
 end
 puts count
-#part 2
 
+#part 2
 for k in 0...pack.size
     targ = pack[k].get_mdist + 1
     for n in (pack[k].get_xcoord - targ)..(pack[k].get_xcoord + targ)
@@ -133,6 +133,9 @@ for k in 0...pack.size
         trigger2 = false
         negy, posy = pack[k].find_ptsy(n,targ)
         for u in 0...pack.size
+            if trigger1 && trigger2
+                break
+            end
             if pack[u].contains?(n,negy)
                 trigger1 = true
             end
