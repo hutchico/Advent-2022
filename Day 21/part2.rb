@@ -1,82 +1,107 @@
 #!/usr/bin/ruby -w
 
-def resolve(stack,dict)
-    marked_for_deletion = []
-    for i in 0...stack.size
-        if stack.size == 0
-            break
-        end
-        if dict[stack[i][1]] != nil && dict[stack[i][3]] != nil
-            case stack[i][2]
-            when "*"
-                dict[stack[i][0]] = dict[stack[i][1]] * dict[stack[i][3]]
-            when "+"
-                dict[stack[i][0]] = dict[stack[i][1]] + dict[stack[i][3]]
-            when "-"
-                dict[stack[i][0]] = dict[stack[i][1]] - dict[stack[i][3]]
-            when "/"
-                dict[stack[i][0]] = dict[stack[i][1]] / dict[stack[i][3]]
-            when "="
-                puts "#{dict[stack[i][1]]} - #{dict[stack[i][3]]}"
-                if dict[stack[i][1]] == dict[stack[i][3]]
-                    print true
-                    puts ''
-                    print dict["humn"]
-                    puts ''
-                    exit
-                end
-                dict["root"] = 0
-            end
+class Node
+    def initialize(name,op,names,value)
+        @name = name
+        @op = op
+        @children = []
+        if names != nil
+            @child_names = [names[0],names[1]]
         else
-            next
+            @child_names = nil
+        end
+        @value = value #may be nil if this is not a number
+    end
+
+    def add_child(child)
+        @children.push(child)
+    end
+
+    def getnames
+        return @child_names
+    end
+
+    def name
+        return @name
+    end
+
+    def op
+        return @op
+    end
+
+    def set_op(op)
+        @op = op
+    end
+
+    def value
+        return @value
+    end
+
+    def set_val(val)
+        @value = val
+    end
+    
+    def get_cvals #DEBUG
+        puts @children[0].screech - @children[1].screech
+    end
+
+    def screech() #resolve this monkey's equation
+        if @value != nil
+            return @value
+        end
+        case @op
+        when "*"
+            return @children[0].screech * @children[1].screech
+        when "+"
+            return @children[0].screech + @children[1].screech
+        when "-"
+            return @children[0].screech - @children[1].screech
+        when "/"
+            return @children[0].screech / @children[1].screech
+        when "="
+            return @children[0].screech == @children[1].screech ? true : false
         end
     end
-    return stack, dict
 end
 
 input = File.new("input.txt","r")
 
 monkeys = []
-shout = {}
-links = []
 
 input.each do |line|
     raw = line.split(' ')
-    arr = [raw[0][0..3]]
-    for i in 1...raw.size
-        arr.push(raw[i])
+    name = raw[0][0..3]
+    if raw.size == 2 #num
+        mk = Node.new(name,nil,nil,raw[1].to_i)
+    else
+        mk = Node.new(name,raw[2],[raw[1],raw[3]],nil)
     end
-    monkeys.push(arr)
+    monkeys.push(mk)
 end
 
-rt = monkeys.index { |n| n[0] == "root"}
-monkeys[rt][2] = "="
-hm = monkeys.index { |n| n[0] == "humn"}
-monkeys[hm][1] = -1
-#print monkeys
+rt = monkeys.index { |n| n.name == "root"}
+monkeys[rt].set_op("=")
+hm = monkeys.index { |n| n.name == "humn"}
+
+for i in 0...monkeys.size #populate each monkey with actual links to child monkey
+    if monkeys[i].value != nil
+        next
+    end
+    targets = monkeys[i].getnames
+    for nm in 0...targets.size
+        ind = monkeys.index { |n| n.name == targets[nm]}
+        monkeys[i].add_child(monkeys[ind])
+    end
+end
+
+monkeys[hm].set_val(3221245800000) #hardcode guess based on tested values to cut down on bruteforce time
+
 while true
-    while true
-        monkeys[hm][1] += 1
-        for i in 0...monkeys.size
-            if monkeys[i].size == 2 #literal
-                shout[monkeys[i][0]] = monkeys[i][1].to_i
-            else #put monkey on the waiting stack and try to resolve it and any waiting monkeys
-                links.unshift(monkeys[i])
-                links, shout = resolve(links,shout)
-            end
-            if shout["root"] != nil
-                break
-            end
-        end
-        if shout["root"] != nil
-            break
-        end
+    monkeys[hm].set_val(monkeys[hm].value + 1)
+    trigger = monkeys[rt].screech
+    if trigger
+        break
     end
-    shout.clear
-    links.clear
 end
 
-
-
-
-puts "Hello world"
+puts monkeys[hm].value
